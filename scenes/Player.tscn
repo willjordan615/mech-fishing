@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://d22uite6h3wt4"]
+
+[ext_resource type="Script" uid="uid://uqdclrwkapyh" path="res://scripts/player.gd" id="1_p0vlq"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_s6ed4"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_15jes"]
+
+[node name="Player3D" type="CharacterBody3D" unique_id=1570056949]
+script = ExtResource("1_p0vlq")
+thruster_strength = 15.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=938525815]
+shape = SubResource("CapsuleShape3D_s6ed4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=601870652]
+mesh = SubResource("CapsuleMesh_15jes")
+
+[node name="RayCast3D" type="RayCast3D" parent="." unique_id=269860421]
+target_position = Vector3(0, -1.5, 0)
