@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://b6r52cmv6mfxd"]
+
+[ext_resource type="Texture2D" uid="uid://dbp2ytdjrgsj4" path="res://assets/Trout Rainbow_baseColor.jpg" id="1_na2vp"]
+[ext_resource type="Texture2D" uid="uid://bsn7oskoyloa" path="res://assets/Trout Rainbow_normal.png" id="2_g4pel"]
+
+[resource]
+resource_name = "Default OBJ"
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("1_na2vp")
+emission_enabled = true
+normal_enabled = true
+normal_scale = 0.0
+normal_texture = ExtResource("2_g4pel")

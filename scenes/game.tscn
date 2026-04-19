@@ -1,40 +1,145 @@
 [gd_scene format=3 uid="uid://cikem8vavtgk4"]
 
 [ext_resource type="PackedScene" uid="uid://d22uite6h3wt4" path="res://scenes/Player.tscn" id="1_uwrxv"]
-[ext_resource type="PackedScene" uid="uid://drusnnhadms6e" path="res://scenes/Fish1.tscn" id="2_yqjtg"]
+[ext_resource type="Script" uid="uid://djouls40atbkc" path="res://scripts/Fish.gd" id="2_gee14"]
+[ext_resource type="Script" uid="uid://cl7tftb16tnb3" path="res://scripts/Playercamera.gd" id="2_u5sy4"]
+[ext_resource type="Script" uid="uid://dnqjhys43xgrk" path="res://scripts/AttachmentManager.gd" id="3_lnu2h"]
+[ext_resource type="PackedScene" uid="uid://b67vsf5c2hihv" path="res://scenes/piton.tscn" id="4_lbhrr"]
+[ext_resource type="Script" uid="uid://mj4e3tln7kl6" path="res://scripts/godrays.gd" id="5_vtaks"]
+[ext_resource type="PackedScene" uid="uid://bagkgpm0784m" path="res://scenes/azure_carp.tscn" id="7_u5sy4"]
+[ext_resource type="Shader" uid="uid://bw7ur0d6ihp8f" path="res://shaders/water_surface.gdshader" id="8_0tnpc"]
+[ext_resource type="Script" uid="uid://c5s3eh1hspu42" path="res://scripts/Griphud.gd" id="8_gee14"]
+[ext_resource type="Shader" uid="uid://nmjmjtf0bbrl" path="res://shaders/godrays.gdshader" id="9_0tnpc"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_yqjtg"]
-size = Vector3(20, 0.2, 20)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kvpfn"]
+render_priority = 0
+shader = ExtResource("9_0tnpc")
+shader_parameter/ray_color = Color(0.3, 0.5, 0.8, 1)
+shader_parameter/opacity = 0.15
+shader_parameter/flicker_speed = 0.8
+shader_parameter/flicker_intensity = 0.3
+shader_parameter/player_pos = Vector3(0, 0, 0)
+shader_parameter/fade_start = 60.0
+shader_parameter/fade_end = 140.0
 
-[sub_resource type="BoxMesh" id="BoxMesh_lnu2h"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_gee14"]
+material = SubResource("ShaderMaterial_kvpfn")
+top_radius = 0.3
+bottom_radius = 8.0
+height = 130.0
 
-[sub_resource type="Environment" id="Environment_uwrxv"]
+[sub_resource type="MultiMesh" id="MultiMesh_0tnpc"]
+transform_format = 1
+instance_count = 30
+mesh = SubResource("CylinderMesh_gee14")
+buffer = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7.52972e-40, 0, 5.1657e-41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3e-45, 0, 2.5e-44, 0, 1.62528e-40, 0, 5.028e-42, 0, 0, 0, 0, 0, 1e-45, 0, 1e-45, 9.404385e-38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7.52972e-40, 0, 0, 0, 0, 1e-45, 6.082e-42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.834e-42, 1.401e-42, 1.834e-42, 1.401e-42, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1e-45, 0, 0, 1.834e-42, 1.401e-42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+
+[sub_resource type="Sky" id="Sky_gee14"]
+
+[sub_resource type="Environment" id="Environment_0tnpc"]
 background_mode = 2
-ambient_light_source = 3
+background_energy_multiplier = 8.95
+sky = SubResource("Sky_gee14")
+sky_custom_fov = 29.0
+ambient_light_color = Color(0.27058825, 0.27058825, 0.81960785, 1)
+ambient_light_energy = 4.4
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.013098838, 0.0651309, 0.2142581, 1)
+fog_light_energy = 8.92
+fog_sun_scatter = 0.06
+fog_density = 0.7567
+fog_sky_affect = 0.829
+fog_depth_curve = 4.2870927
+fog_depth_begin = 20.0
+fog_depth_end = 200.0
+volumetric_fog_density = 0.6896
+volumetric_fog_albedo = Color(0.408588, 0.5874945, 0.9679447, 1)
+volumetric_fog_emission = Color(0.40392157, 0.40392157, 0.94509804, 1)
+volumetric_fog_ambient_inject = 2.52
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vtaks"]
+render_priority = 0
+shader = ExtResource("8_0tnpc")
+shader_parameter/scroll_speed_a = 0.8690000412775
+shader_parameter/scroll_speed_b = 0.6010000285475
+shader_parameter/caustic_intensity = 1.5510000736725
+shader_parameter/alpha = 0.22800001083
+shader_parameter/water_color = Color(0.029142112, 0.3383205, 0.4915179, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_kvpfn"]
+material = SubResource("ShaderMaterial_vtaks")
+flip_faces = true
+uv2_padding = 3.45
+size = Vector2(10000, 10000)
 
 [node name="Game" type="Node3D" unique_id=299287727]
 
-[node name="Player3D" parent="." unique_id=1570056949 instance=ExtResource("1_uwrxv")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
+[node name="AzureCarp" parent="." unique_id=912766220 node_paths=PackedStringArray("water_surface") instance=ExtResource("7_u5sy4")]
+script = ExtResource("2_gee14")
+water_surface = NodePath("../WaterSurface")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=325820906]
+[node name="Player3D" parent="." unique_id=1570056949 node_paths=PackedStringArray("fish_node") instance=ExtResource("1_uwrxv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.754259, -18.389465)
+safe_margin = 0.1
+move_speed = 2.5
+turn_speed = 2.0
+jump_speed = 3.0
+detach_gravity = 3.0
+fish_node = NodePath("../AzureCarp")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=732669583]
-transform = Transform3D(20, 0, 0, 0, 0.2, 0, 0, 0, 20, 0, 0, 0)
-shape = SubResource("BoxShape3D_yqjtg")
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="Player3D" unique_id=1889407578]
+transform = Transform3D(1, 0, 0, 0, 0.8882327, 0.45939386, 0, -0.45939386, 0.8882327, 0.4071324, 1.2157059, 0.51161623)
+remote_path = NodePath("../../PlayerCamera")
+update_scale = false
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=569013770]
-transform = Transform3D(20, 0, 0, 0, 0.2, 0, 0, 0, 20, 0, 0, 0)
-mesh = SubResource("BoxMesh_lnu2h")
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=675267381]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 5, 10)
+[node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="Player3D" unique_id=792172385]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -15.754259, 18.389465)
+multimesh = SubResource("MultiMesh_0tnpc")
+script = ExtResource("5_vtaks")
+spread = 250.0
+water_y = 75.0
+shaft_length = 140.0
+fade_speed = 0.7
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1697752384]
-transform = Transform3D(0.70710677, 0.49999997, -0.49999997, 0, 0.70710677, 0.70710677, 0.70710677, -0.49999997, 0.49999997, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 27.500751, 0)
+light_color = Color(0.2986368, 0.45573848, 0.89242905, 1)
+light_energy = 1.096
+light_specular = 0.139
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2046915835]
-environment = SubResource("Environment_uwrxv")
+environment = SubResource("Environment_0tnpc")
 
-[node name="Fish" parent="." unique_id=2104753398 instance=ExtResource("2_yqjtg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+[node name="AttachmentManager" type="Node" parent="." unique_id=881678287 node_paths=PackedStringArray("player_node")]
+script = ExtResource("3_lnu2h")
+player_node = NodePath("../Player3D")
+piton_scene = ExtResource("4_lbhrr")
+max_rope_length = 7.0
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=711303730]
+
+[node name="Control" type="Control" parent="CanvasLayer2" unique_id=662540896]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("8_gee14")
+
+[node name="PlayerCamera" type="Camera3D" parent="." unique_id=675267381 node_paths=PackedStringArray("remote_transform", "player")]
+transform = Transform3D(1, 0, 0, 0, 0.8882327, 0.45939386, 0, -0.45939386, 0.8882327, 0.4071324, 16.969965, -17.87785)
+current = true
+script = ExtResource("2_u5sy4")
+position_smoothing = 4.0
+zoom_speed = 0.1
+zoom_min = 0.3
+zoom_max = 4.0
+remote_transform = NodePath("../Player3D/RemoteTransform3D")
+player = NodePath("../Player3D")
+
+[node name="WaterSurface" type="MeshInstance3D" parent="." unique_id=823263734]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.03807068, 64.88637, 0.15156078)
+gi_mode = 2
+gi_lightmap_texel_scale = 1.8687
+visibility_range_fade_mode = 2
+mesh = SubResource("PlaneMesh_kvpfn")

@@ -2,19 +2,59 @@
 
 [ext_resource type="Script" uid="uid://uqdclrwkapyh" path="res://scripts/player.gd" id="1_p0vlq"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_s6ed4"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_p0vlq"]
+radius = 0.75
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_15jes"]
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_p0vlq"]
+height = 0.4
+
+[sub_resource type="SphereMesh" id="SphereMesh_p0vlq"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_v6fml"]
+left_to_right = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_p0vlq"]
 
 [node name="Player3D" type="CharacterBody3D" unique_id=1570056949]
+floor_block_on_wall = false
+floor_max_angle = 3.1415927
+floor_snap_length = 0.5
 script = ExtResource("1_p0vlq")
-thruster_strength = 15.0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=938525815]
-shape = SubResource("CapsuleShape3D_s6ed4")
+[node name="ShapeCast3D" type="ShapeCast3D" parent="." unique_id=451338183]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68712723, 0)
+shape = SubResource("SphereShape3D_p0vlq")
+target_position = Vector3(0, -0.5, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=601870652]
-mesh = SubResource("CapsuleMesh_15jes")
-
-[node name="RayCast3D" type="RayCast3D" parent="." unique_id=269860421]
+[node name="PitonRay" type="RayCast3D" parent="." unique_id=641794049]
+transform = Transform3D(-3.5318354e-08, -2.575458e-08, 0.9999999, 0.8524213, 0.52285564, 4.3572044e-08, -0.52285564, 0.85242116, 3.4873553e-09, 0.00074732304, 0.2182496, 0.0002515316)
 target_position = Vector3(0, -1.5, 0)
+hit_back_faces = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=887282670]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.19880679, 0)
+shape = SubResource("CylinderShape3D_p0vlq")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1137523586]
+transform = Transform3D(1, 0, 0, 0, 0.4, 0, 0, 0, 1, 0, 0.1329748, 0)
+mesh = SubResource("SphereMesh_p0vlq")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="MeshInstance3D" unique_id=925601440]
+transform = Transform3D(0.1, 0, 0, 0, -1, 1.509958e-08, 0, -1.509958e-07, -0.1, -0.2620547, -0.41374892, 0.43305004)
+mesh = SubResource("PrismMesh_v6fml")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="MeshInstance3D" unique_id=970119200]
+transform = Transform3D(0.1, 0, 0, 0, -1, 1.509958e-08, 0, -1.509958e-07, -0.1, 0.35034034, -0.41374892, 0.43305004)
+mesh = SubResource("PrismMesh_v6fml")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="MeshInstance3D" unique_id=527709269]
+transform = Transform3D(0.1, 0, 0, 0, -1, 1.509958e-08, 0, -1.509958e-07, -0.1, -0.2620547, -0.41374892, -0.44585738)
+mesh = SubResource("PrismMesh_v6fml")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="MeshInstance3D" unique_id=1467787872]
+transform = Transform3D(0.1, 0, 0, 0, -1, 1.509958e-08, 0, -1.509958e-07, -0.1, 0.31178907, -0.41374892, -0.44585738)
+mesh = SubResource("PrismMesh_v6fml")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MeshInstance3D" unique_id=252209132]
+transform = Transform3D(0.2, 0, 0, 0, 0.20000002, 0, 0, 0, 0.2, 0, 0.2580196, -0.33251625)
+mesh = SubResource("BoxMesh_p0vlq")

@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://b67vsf5c2hihv"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_xeoej"]
+size = Vector3(0.15, 0.15, 0.15)
+
+[node name="Piton" type="MeshInstance3D" unique_id=53887527]
+mesh = SubResource("BoxMesh_xeoej")
