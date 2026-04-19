@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://ctycc5ye0emto"]
+
+[ext_resource type="Script" uid="uid://dj4a7awttxapu" path="res://scripts/BubbleEmitter.gd" id="1_l46u0"]
+
+[node name="BubbleEmitter" type="GPUParticles3D" unique_id=1522551893]
+script = ExtResource("1_l46u0")
+stream_rate = 100.0
+rise_speed = 1.4
+bubble_lifetime = 12.0
+bubble_size_min = 0.08
+bubble_size_max = 0.7

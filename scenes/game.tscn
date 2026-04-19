@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://djouls40atbkc" path="res://scripts/Fish.gd" id="2_gee14"]
 [ext_resource type="Script" uid="uid://cl7tftb16tnb3" path="res://scripts/Playercamera.gd" id="2_u5sy4"]
 [ext_resource type="Script" uid="uid://dnqjhys43xgrk" path="res://scripts/AttachmentManager.gd" id="3_lnu2h"]
+[ext_resource type="PackedScene" uid="uid://ca5src7oidbx0" path="res://scenes/BubbleEmitterBurst.tscn" id="4_kvpfn"]
 [ext_resource type="PackedScene" uid="uid://b67vsf5c2hihv" path="res://scenes/piton.tscn" id="4_lbhrr"]
 [ext_resource type="Script" uid="uid://mj4e3tln7kl6" path="res://scripts/godrays.gd" id="5_vtaks"]
 [ext_resource type="PackedScene" uid="uid://bagkgpm0784m" path="res://scenes/azure_carp.tscn" id="7_u5sy4"]
@@ -58,6 +59,49 @@ volumetric_fog_albedo = Color(0.408588, 0.5874945, 0.9679447, 1)
 volumetric_fog_emission = Color(0.40392157, 0.40392157, 0.94509804, 1)
 volumetric_fog_ambient_inject = 2.52
 
+[sub_resource type="GDScript" id="GDScript_kvpfn"]
+resource_name = "CrosshairHUD.gd"
+script/source = "# CrosshairHUD.gd
+# Attach to a Control node inside a CanvasLayer.
+# Assign the PlayerCamera in the inspector.
+# Crosshair appears only when camera is ADS'd.
+
+extends Control
+
+@export var camera: Camera3D
+
+const COLOR := Color(1.0, 1.0, 1.0, 0.85)
+const GAP   := 8.0
+const LEN   := 14.0
+const DOT_R := 2.5
+
+
+func _process(_delta: float) -> void:
+	var ads: bool = camera != null and camera.is_ads()
+	if visible != ads:
+		visible = ads
+		queue_redraw()
+
+
+func _draw() -> void:
+	if not visible:
+		return
+
+	var c := size * 0.5
+
+	# Four lines around center gap
+	draw_line(c + Vector2(-GAP - LEN, 0), c + Vector2(-GAP, 0), COLOR, 1.5)
+	draw_line(c + Vector2( GAP, 0),       c + Vector2( GAP + LEN, 0), COLOR, 1.5)
+	draw_line(c + Vector2(0, -GAP - LEN), c + Vector2(0, -GAP), COLOR, 1.5)
+	draw_line(c + Vector2(0,  GAP),       c + Vector2(0,  GAP + LEN), COLOR, 1.5)
+
+	# Center dot
+	draw_arc(c, DOT_R, 0.0, TAU, 16, COLOR, 1.0)
+	
+func _ready() -> void:
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+"
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vtaks"]
 render_priority = 0
 shader = ExtResource("8_0tnpc")
@@ -79,21 +123,25 @@ size = Vector2(10000, 10000)
 script = ExtResource("2_gee14")
 water_surface = NodePath("../WaterSurface")
 
-[node name="Player3D" parent="." unique_id=1570056949 node_paths=PackedStringArray("fish_node") instance=ExtResource("1_uwrxv")]
+[node name="Player3D" parent="." unique_id=1570056949 node_paths=PackedStringArray("fish_node", "attachment_manager", "player_camera") instance=ExtResource("1_uwrxv")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.754259, -18.389465)
 safe_margin = 0.1
-move_speed = 2.5
-turn_speed = 2.0
-jump_speed = 3.0
-detach_gravity = 3.0
+move_speed = 2.0
+turn_speed = 1.8
+jump_speed = 2.5
+detach_gravity = 2.0
 fish_node = NodePath("../AzureCarp")
+attachment_manager = NodePath("../AttachmentManager")
+player_camera = NodePath("../PlayerCamera")
+bubble_emitter_scene = ExtResource("4_kvpfn")
+bubble_displacement_threshold = 2.5
 
 [node name="RemoteTransform3D" type="RemoteTransform3D" parent="Player3D" unique_id=1889407578]
 transform = Transform3D(1, 0, 0, 0, 0.8882327, 0.45939386, 0, -0.45939386, 0.8882327, 0.4071324, 1.2157059, 0.51161623)
 remote_path = NodePath("../../PlayerCamera")
 update_scale = false
 
-[node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="Player3D" unique_id=792172385]
+[node name="Godrays" type="MultiMeshInstance3D" parent="Player3D" unique_id=792172385]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -15.754259, 18.389465)
 multimesh = SubResource("MultiMesh_0tnpc")
 script = ExtResource("5_vtaks")
@@ -111,20 +159,33 @@ light_specular = 0.139
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2046915835]
 environment = SubResource("Environment_0tnpc")
 
-[node name="AttachmentManager" type="Node" parent="." unique_id=881678287 node_paths=PackedStringArray("player_node")]
+[node name="AttachmentManager" type="Node" parent="." unique_id=881678287 node_paths=PackedStringArray("fish_node", "player_node")]
 script = ExtResource("3_lnu2h")
+fish_node = NodePath("../AzureCarp")
 player_node = NodePath("../Player3D")
 piton_scene = ExtResource("4_lbhrr")
-max_rope_length = 7.0
 
-[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=711303730]
+[node name="Grip" type="CanvasLayer" parent="." unique_id=711303730]
 
-[node name="Control" type="Control" parent="CanvasLayer2" unique_id=662540896]
+[node name="Control" type="Control" parent="Grip" unique_id=662540896]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("8_gee14")
+player = NodePath("../../Player3D")
+
+[node name="Crosshair" type="CanvasLayer" parent="." unique_id=1598933891]
+
+[node name="Control" type="Control" parent="Crosshair" unique_id=183801227 node_paths=PackedStringArray("camera")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_kvpfn")
+camera = NodePath("../../PlayerCamera")
 
 [node name="PlayerCamera" type="Camera3D" parent="." unique_id=675267381 node_paths=PackedStringArray("remote_transform", "player")]
 transform = Transform3D(1, 0, 0, 0, 0.8882327, 0.45939386, 0, -0.45939386, 0.8882327, 0.4071324, 16.969965, -17.87785)

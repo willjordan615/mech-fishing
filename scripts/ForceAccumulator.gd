@@ -1,20 +1,19 @@
 # ForceAccumulator.gd
 # Two-mode force model:
-# ATTACHED — surface-relative, fish is your world
+# ATTACHED — tether forces and behavior forces only.
+#            Surface attachment is handled by Player.gd directly.
 # DETACHED — world-space gravity modified by buoyancy and drag
 
 extends Resource
-class_name ForceAccumulator
 
 # ── Tunable ────────────────────────────────────────────────────────────────
 @export var gravity_strength: float = 9.8
 @export var buoyancy_strength: float = 6.0
 @export var drag_coefficient: float = 0.8
-@export var surface_pull_strength: float = 12.0
 
 const WARNING_THRESHOLD := 0.8
 const TETHER_SLACK_FRACTION := 0.94
-const TETHER_PULL_SCALE := 3.8
+const TETHER_PULL_SCALE := 50.8
 
 # ── State ──────────────────────────────────────────────────────────────────
 var attached: bool = false
@@ -42,7 +41,6 @@ func resolve(delta: float) -> Vector3:
 	var net := Vector3.ZERO
 
 	if attached:
-		net += -surface_normal * surface_pull_strength
 		for f in _behavior_forces:
 			net += _apply_load(f)
 		net += _resolve_tether_forces()
@@ -64,9 +62,6 @@ func resolve(delta: float) -> Vector3:
 
 # ── Load Distribution ──────────────────────────────────────────────────────
 
-## Distribute a scalar drain amount across active pitons.
-## Returns the leftover drain that bleeds through to the player's grip pool.
-## Use this for grip-stability drain, separate from vector force transfer.
 func absorb_drain(amount: float) -> float:
 	if not attachment_manager:
 		return amount
@@ -76,16 +71,13 @@ func absorb_drain(amount: float) -> float:
 		return amount
 
 	var remaining := amount
-
 	var sorted := connections.duplicate()
 	sorted.sort_custom(func(a, b): return a.load_max < b.load_max)
 
 	for conn in sorted:
 		if conn.failed:
 			continue
-
 		var available: float = float(conn.load_max) - float(conn.load_current)
-
 		if remaining <= available:
 			conn.load_current += remaining
 			remaining = 0.0
@@ -100,7 +92,6 @@ func absorb_drain(amount: float) -> float:
 	attachment_manager.connections = attachment_manager.connections.filter(
 		func(c): return not c.failed
 	)
-
 	return remaining
 
 
@@ -114,19 +105,15 @@ func _apply_load(force: Vector3) -> Vector3:
 
 	var force_magnitude := force.length()
 	var remaining := force_magnitude
-
 	var sorted := connections.duplicate()
 	sorted.sort_custom(func(a, b): return a.load_max < b.load_max)
 
 	for conn in sorted:
 		if conn.failed:
 			continue
-
 		var available: float = float(conn.load_max) - float(conn.load_current)
-
 		if conn.load_current / conn.load_max >= WARNING_THRESHOLD:
 			print("[Piton] WARNING — anchor near limit (%.0f%% load)" % (conn.load_current / conn.load_max * 100))
-
 		if remaining <= available:
 			conn.load_current += remaining
 			remaining = 0.0
@@ -165,8 +152,8 @@ func _resolve_tether_forces() -> Vector3:
 
 		var anchor_world: Vector3 = fish_node.to_global(conn.anchor_local)
 		var player_world: Vector3 = player_node.global_position + Vector3(0, -attachment_manager.foot_offset, 0)
-		var to_anchor: Vector3 = anchor_world - player_world
-		var distance: float     = to_anchor.length()
+		var to_anchor: Vector3    = anchor_world - player_world
+		var distance: float       = to_anchor.length()
 		var slack_distance: float = attachment_manager.max_rope_length * TETHER_SLACK_FRACTION
 		var max_distance: float   = attachment_manager.max_rope_length
 
@@ -177,7 +164,6 @@ func _resolve_tether_forces() -> Vector3:
 			(distance - slack_distance) / (max_distance - slack_distance),
 			0.0, 1.0
 		)
-
 		var pull_strength: float = conn.load_max * TETHER_PULL_SCALE * tension
 		net += to_anchor.normalized() * pull_strength
 
